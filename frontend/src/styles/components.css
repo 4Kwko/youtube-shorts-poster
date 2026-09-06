@@ -1,151 +1,233 @@
-/* --- botões --- */
-
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  min-height: 38px;
+  padding: 9px 15px;
   border: 1px solid transparent;
-  border-radius: var(--radius);
-  padding: 10px 18px;
-  font-weight: 500;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background var(--transition), border-color var(--transition),
-    transform var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition),
+    color var(--transition);
 }
-
 .button--primary {
   background: var(--accent);
-  color: #fff;
+  color: #101708;
 }
-
 .button--primary:hover:not(:disabled) {
   background: var(--accent-hover);
 }
-
-.button--primary:active:not(:disabled) {
-  background: var(--accent-active);
-  transform: translateY(1px);
-}
-
-.button--primary:disabled {
-  background: var(--surface-hover);
-  color: var(--text-faint);
-  cursor: not-allowed;
-}
-
-.button--ghost {
-  background: transparent;
+.button--secondary {
+  background: var(--surface-raised);
   border-color: var(--border-strong);
   color: var(--text);
 }
-
-.button--ghost:hover:not(:disabled) {
+.button--secondary:hover:not(:disabled) {
   background: var(--surface-hover);
-  border-color: var(--accent);
+  border-color: var(--text-faint);
 }
-
-.button--icon {
-  padding: 7px;
-  border-radius: var(--radius-sm);
-  border-color: transparent;
+.button--ghost {
   background: transparent;
   color: var(--text-muted);
 }
-
-.button--icon:hover {
+.button--ghost:hover:not(:disabled) {
   background: var(--surface-hover);
   color: var(--text);
 }
-
-/* --- pill de status do motor --- */
-
+.button--danger {
+  background: rgba(255, 91, 98, 0.12);
+  border-color: rgba(255, 91, 98, 0.3);
+  color: var(--danger);
+}
+.button--danger:hover:not(:disabled) {
+  background: rgba(255, 91, 98, 0.2);
+}
+.button--icon {
+  min-width: 34px;
+  min-height: 34px;
+  padding: 7px;
+  background: transparent;
+  color: var(--text-muted);
+}
+.button--icon:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.button--primary:disabled {
+  background: var(--surface-raised);
+  color: #9aaa9d;
+  border-color: var(--border);
+  opacity: 0.8;
+}
+.spinner {
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.badge--success {
+  color: var(--success);
+  background: var(--accent-soft);
+  border-color: rgba(183, 243, 74, 0.13);
+}
+.badge--warning {
+  color: var(--warn);
+  background: rgba(255, 191, 71, 0.06);
+}
+.badge--danger {
+  color: var(--danger);
+  background: rgba(255, 91, 98, 0.06);
+}
+.badge--info {
+  color: var(--info);
+  background: rgba(102, 168, 255, 0.06);
+}
 .engine-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 12.5px;
+  border-radius: 7px;
+  background: var(--bg-secondary);
+  font-size: 11px;
   color: var(--text-muted);
 }
-
 .engine-pill__dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--text-faint);
   flex: none;
 }
-
-.engine-pill--ready {
-  color: var(--text);
-}
-
 .engine-pill--ready .engine-pill__dot {
   background: var(--success);
 }
-
 .engine-pill--starting .engine-pill__dot,
 .engine-pill--checking .engine-pill__dot {
   background: var(--warn);
+  animation: pulse 1.6s ease-in-out infinite;
 }
-
 .engine-pill--offline {
   color: var(--danger);
-  border-color: rgba(248, 113, 113, 0.3);
 }
-
 .engine-pill--offline .engine-pill__dot {
   background: var(--danger);
 }
-
 .engine-pill__retry {
-  border: none;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  text-decoration: underline;
+  border: 0;
   padding: 0;
-  font-size: 12.5px;
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  font-size: 11px;
 }
-
-/* --- painéis e mensagens --- */
-
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }
-
 .message {
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.6;
 }
-
 .message--error {
   color: var(--danger);
 }
-
 .message--warn {
   color: var(--warn);
 }
-
+.message--success {
+  color: var(--success);
+}
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 72px 24px;
+  gap: 12px;
+  padding: 44px 20px;
   border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   color: var(--text-muted);
   text-align: center;
 }
-
-.empty__icon {
+.empty h2 {
+  color: var(--text);
+  font-size: 17px;
+}
+.empty__hint {
+  font-size: 12px;
+  max-width: 46ch;
+}
+.timeline-art {
+  width: 190px;
+  height: auto;
   color: var(--text-faint);
+}
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--surface) 25%,
+    var(--surface-hover) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease infinite;
+  border-radius: var(--radius);
+  min-height: 144px;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+.progress__track {
+  height: 5px;
+  background: var(--surface-raised);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress__bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 220ms ease;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }

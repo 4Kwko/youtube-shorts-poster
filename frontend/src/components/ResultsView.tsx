@@ -1,35 +1,56 @@
+import { ArrowLeft, CheckCircle2, Layers } from "lucide-react";
 import { ClipCard } from "./ClipCard";
 import { SettingsSummary } from "./SettingsSummary";
+import { Badge, Button, EmptyState } from "./ui";
 import type { Clip, Video } from "../lib/types";
-
 interface Props {
   video: Video;
   clips: Clip[];
   onRestart: () => void;
 }
-
 export function ResultsView({ video, clips, onRestart }: Props) {
   return (
     <section className="results">
-      <header className="results__header">
+      <header className="page-heading results__header">
         <div>
-          <h1>{clips.length} clips prontos</h1>
+          <span className="eyebrow">RESULTADOS / PROJETO</span>
+          <h1>
+            {clips.length}{" "}
+            {clips.length === 1 ? "clipe pronto" : "clipes prontos"}
+          </h1>
           {video.title && <p className="results__subject">{video.title}</p>}
-          <SettingsSummary settings={video.settings} />
         </div>
-        <button type="button" className="button button--ghost" onClick={onRestart}>
-          Novo vídeo
-        </button>
+        <Button variant="ghost" onClick={onRestart}>
+          <ArrowLeft size={15} aria-hidden="true" />
+          Voltar
+        </Button>
       </header>
-
+      <div className="results__toolbar">
+        <SettingsSummary settings={video.settings} />
+        <Badge tone="success">
+          <CheckCircle2 size={12} aria-hidden="true" />
+          Renderização concluída
+        </Badge>
+      </div>
       {clips.length === 0 ? (
-        <p className="message message--warn">Nenhum clip foi gerado para este vídeo.</p>
+        <EmptyState title="Nenhum clipe disponível.">
+          Nenhum clipe foi gerado para este vídeo.
+        </EmptyState>
       ) : (
-        <div className="clips">
-          {clips.map((clip) => (
-            <ClipCard key={clip.id} clip={clip} />
-          ))}
-        </div>
+        <>
+          <div className="results__label">
+            <Layers size={15} aria-hidden="true" />
+            <span>Revise e baixe seus cortes</span>
+            <span className="mono">
+              {String(clips.length).padStart(2, "0")} CLIPES
+            </span>
+          </div>
+          <div className="clips">
+            {clips.map((clip) => (
+              <ClipCard key={clip.id} clip={clip} />
+            ))}
+          </div>
+        </>
       )}
     </section>
   );

@@ -25,7 +25,12 @@ interface ToggleProps {
   onChange: (checked: boolean) => void;
 }
 
-export function Toggle({ label, checked, disabled = false, onChange }: ToggleProps) {
+export function Toggle({
+  label,
+  checked,
+  disabled = false,
+  onChange,
+}: ToggleProps) {
   return (
     <label className="toggle">
       <span className="toggle__label">{label}</span>
@@ -57,13 +62,35 @@ export function Segmented<T extends string>({
   onChange,
 }: SegmentedProps<T>) {
   return (
-    <div className="segmented" role="radiogroup" aria-label={label}>
+    <div
+      className="segmented"
+      role="radiogroup"
+      aria-label={label}
+      onKeyDown={(event) => {
+        if (
+          disabled ||
+          !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(
+            event.key,
+          )
+        )
+          return;
+        event.preventDefault();
+        const index = options.findIndex((option) => option.id === value);
+        const step = ["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1;
+        const next = (index + step + options.length) % options.length;
+        const option = options[next];
+        if (option) onChange(option.id);
+        const buttons = event.currentTarget.querySelectorAll<HTMLButtonElement>("button");
+        buttons[next]?.focus();
+      }}
+    >
       {options.map((option) => (
         <button
           key={option.id}
           type="button"
           role="radio"
           aria-checked={value === option.id}
+          tabIndex={value === option.id ? 0 : -1}
           className="segmented__item"
           disabled={disabled}
           onClick={() => onChange(option.id)}
@@ -130,7 +157,13 @@ interface ColorsProps {
   onChange: (value: string) => void;
 }
 
-export function ColorChoice({ label, value, presets, disabled, onChange }: ColorsProps) {
+export function ColorChoice({
+  label,
+  value,
+  presets,
+  disabled,
+  onChange,
+}: ColorsProps) {
   return (
     <div className="colors">
       <span className="colors__label">{label}</span>

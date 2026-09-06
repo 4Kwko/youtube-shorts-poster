@@ -44,6 +44,6 @@ describe("navegação", () => {
       expect(VIEW_TITLES[key]).toBeTruthy();
     }
     expect(VIEW_TITLES.processing).toBe("Processando");
-    expect(VIEW_TITLES.results).toBe("Clips");
+    expect(VIEW_TITLES.results).toBe("Clipes");
   });
 });

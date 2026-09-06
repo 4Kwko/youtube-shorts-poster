@@ -23,7 +23,7 @@ export function useAppSettings() {
     setSettings(DEFAULT_SETTINGS);
   }, []);
 
-  // Sem pasta escolhida ainda: sugere Videos\Clipper do próprio usuário.
+  // Sem pasta escolhida ainda: sugere Videos\SignalCut do próprio usuário.
   useEffect(() => {
     if (settings.output_directory) return;
     let active = true;

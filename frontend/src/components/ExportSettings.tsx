@@ -26,7 +26,10 @@ export function ExportSettings({ value, disabled, onChange }: Props) {
     <>
       <Field label="Pasta de saída">
         <div className="folder">
-          <span className="folder__path" title={value.output_directory ?? undefined}>
+          <span
+            className="folder__path"
+            title={value.output_directory ?? undefined}
+          >
             {shortenPath(value.output_directory)}
           </span>
           <button

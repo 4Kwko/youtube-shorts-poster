@@ -3,6 +3,7 @@
 client_secret*.json
 youtube-token*.json
 /Clipper.exe
+/SignalCut.exe
 .env.*
 !.env.example
 

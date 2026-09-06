@@ -16,7 +16,7 @@ export const VIEW_TITLES: Record<ViewKey, string> = {
   projects: "Projetos",
   settings: "Configurações",
   processing: "Processando",
-  results: "Clips",
+  results: "Clipes",
 };
 
 interface ResolveParams {

@@ -7,6 +7,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
     & npm run tauri -- build --no-bundle
     if ($LASTEXITCODE -ne 0) { throw 'Desktop build failed' }
-    Copy-Item 'src-tauri\target\release\clipper-desktop.exe' (Join-Path $projectRoot 'Clipper.exe')
-    Write-Host 'Built Clipper.exe. Keep it beside backend/ and .venv/.'
+    Copy-Item 'src-tauri\target\release\clipper-desktop.exe' (Join-Path $projectRoot 'SignalCut.exe')
+    Write-Host 'Built SignalCut.exe. Keep it beside backend/ and .venv/.'
 } finally { Pop-Location }

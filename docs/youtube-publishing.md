@@ -1,19 +1,19 @@
 # Publicação de YouTube Shorts
 
-## Usar no Clipper
+## Usar no SignalCut
 
-1. Abra `Clipper.exe` na raiz deste projeto e expanda **YouTube Shorts**.
+1. Abra `SignalCut.exe` na raiz deste projeto e expanda **Publicação no YouTube**.
 2. Se o canal já foi conectado pelo terminal, a conexão existente será reconhecida.
    Para conectar pela interface, importe o JSON de um cliente Google OAuth **Desktop app**
    e clique em **Entrar com Google**. A autorização acontece no navegador.
-3. Use a conta do canal configurado em `YOUTUBE_CHANNEL_ID`. O Clipper verifica esse ID
+3. Use a conta do canal configurado em `YOUTUBE_CHANNEL_ID`. O SignalCut verifica esse ID
    antes de salvar uma nova conexão e antes de publicar.
 4. Preencha **Legenda fixa da postagem** e **Hashtags**. Essa legenda é a descrição do
    Short; as legendas faladas na imagem são configuradas separadamente na renderização.
 5. Marque **Publicar automaticamente após renderizar**, escolha a visibilidade e salve.
    As alterações são lidas pelo worker sem reiniciar. Um envio já iniciado pode terminar
    depois de pausar; os próximos envios aguardam a reativação.
-6. Escolha seus vídeos e gere os cortes. Mantenha o Clipper aberto até a fila terminar.
+6. Escolha seus vídeos e gere os cortes. Mantenha o SignalCut aberto até a fila terminar.
 
 O texto e a visibilidade são copiados para cada clipe quando ele entra na fila. Alterações
 posteriores valem para novos clipes. Renders antigos não são publicados retroativamente.
@@ -49,6 +49,6 @@ continuam em `storage/youtube-token.json` e `storage/youtube-uploads.db`, preser
 conexões e recibos. As preferências também ficam nesse banco. Todo `storage/` é ignorado
 pelo Git. Nunca compartilhe esses arquivos nem `.env`.
 
-Compile com `powershell -File scripts/build-windows.ps1`. O resultado é `Clipper.exe`
+Compile com `powershell -File scripts/build-windows.ps1`. O resultado é `SignalCut.exe`
 na raiz. Ele precisa do projeto, `.venv` Python 3.12+ com dependências e FFmpeg/FFprobe.
-Não é um instalador independente. Feche e reabra o Clipper depois de atualizar o executável.
+Não é um instalador independente. Feche e reabra o SignalCut depois de atualizar o executável.

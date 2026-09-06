@@ -11,14 +11,16 @@ interface Props {
 /** Fração da altura do canvas ocupada pelo vídeo central, por layout. */
 function foregroundHeightRatio(settings: VideoSettings): number {
   const width = settings.foreground_scale / 100;
-  if (settings.layout === "blurred_16_9") return (width * 1080 * (9 / 16)) / 1920;
+  if (settings.layout === "blurred_16_9")
+    return (width * 1080 * (9 / 16)) / 1920;
   return (width * 1080 * (3 / 4)) / 1920;
 }
 
 /** Posição vertical aproximada da legenda, do topo do quadro. */
 function subtitleTop(settings: VideoSettings): number {
   const margins = { top: 1360, center: 860, bottom: 420 };
-  const margin = margins[settings.subtitle_position] + settings.subtitle_vertical_offset;
+  const margin =
+    margins[settings.subtitle_position] + settings.subtitle_vertical_offset;
   const bounded = Math.min(Math.max(margin, 120), 1520);
   return (1920 - bounded) / 1920;
 }
@@ -53,11 +55,23 @@ export function LayoutPreview({ settings, compact = false }: Props) {
   return (
     <div className={`preview ${compact ? "preview--compact" : ""}`}>
       {withBackground && (
-        <span className="preview__background" style={backgroundStyle} aria-hidden="true" />
+        <span
+          className="preview__background"
+          style={backgroundStyle}
+          aria-hidden="true"
+        />
       )}
-      <span className="preview__foreground" style={foregroundStyle} aria-hidden="true" />
+      <span
+        className="preview__foreground"
+        style={foregroundStyle}
+        aria-hidden="true"
+      />
       {settings.subtitles_enabled && (
-        <span className="preview__subtitle" style={subtitleStyle} aria-hidden="true">
+        <span
+          className="preview__subtitle"
+          style={subtitleStyle}
+          aria-hidden="true"
+        >
           legenda
         </span>
       )}

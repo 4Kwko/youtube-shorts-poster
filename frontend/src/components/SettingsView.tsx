@@ -63,16 +63,26 @@ export function SettingsView({
   onReset,
 }: Props) {
   const [confirmingReset, setConfirmingReset] = useState(false);
-  const set = (patch: Partial<VideoSettings>) => onChange({ ...settings, ...patch });
+  const set = (patch: Partial<VideoSettings>) =>
+    onChange({ ...settings, ...patch });
 
   const subtitles = settings.subtitles_enabled;
   const composed = usesBackground(settings.layout);
 
   return (
     <div className="settings-page">
+      <header className="page-heading">
+        <div>
+          <span className="eyebrow">PREFERÊNCIAS DO STUDIO</span>
+          <h1>Seu jeito de criar.</h1>
+          <p>
+            Os ajustes são salvos automaticamente para os próximos projetos.
+          </p>
+        </div>
+      </header>
       <div className="settings-page__columns">
         <div className="settings-page__column">
-          <Section title="Clips">
+          <Section title="Duração dos clipes">
             <Slider
               label="Duração"
               value={durationIndex(settings.clip_duration_seconds)}
@@ -82,13 +92,19 @@ export function SettingsView({
               maxLabel={`${CLIP_DURATION_OPTIONS[CLIP_DURATION_OPTIONS.length - 1]}s`}
               display={`${settings.clip_duration_seconds}s`}
               // O slider anda por índice: a lista não é progressão regular.
-              onChange={(index) => set({ clip_duration_seconds: durationAtIndex(index) })}
+              onChange={(index) =>
+                set({ clip_duration_seconds: durationAtIndex(index) })
+              }
             />
           </Section>
 
           <Section title="Vídeo">
             <Field label="Layout">
-              <div className="layouts" role="radiogroup" aria-label="Layout do vídeo">
+              <div
+                className="layouts"
+                role="radiogroup"
+                aria-label="Layout do vídeo"
+              >
                 {LAYOUT_OPTIONS.map((option) => (
                   <button
                     key={option.id}
@@ -101,7 +117,10 @@ export function SettingsView({
                     <span className="layout-card__head">
                       <span className="layout-card__name">{option.name}</span>
                     </span>
-                    <LayoutPreview settings={{ ...settings, layout: option.id }} compact />
+                    <LayoutPreview
+                      settings={{ ...settings, layout: option.id }}
+                      compact
+                    />
                   </button>
                 ))}
               </div>
@@ -129,7 +148,9 @@ export function SettingsView({
                   minLabel="Claro"
                   maxLabel="Escuro"
                   display={`${settings.background_darkness}%`}
-                  onChange={(background_darkness) => set({ background_darkness })}
+                  onChange={(background_darkness) =>
+                    set({ background_darkness })
+                  }
                 />
                 <Slider
                   label="Tamanho do vídeo"
@@ -204,7 +225,9 @@ export function SettingsView({
                       ? "Sem ajuste"
                       : `${settings.subtitle_vertical_offset > 0 ? "+" : ""}${settings.subtitle_vertical_offset}px`
                   }
-                  onChange={(subtitle_vertical_offset) => set({ subtitle_vertical_offset })}
+                  onChange={(subtitle_vertical_offset) =>
+                    set({ subtitle_vertical_offset })
+                  }
                 />
                 <Field label="Estilo">
                   <Segmented
@@ -218,13 +241,17 @@ export function SettingsView({
                   label="Texto"
                   value={settings.subtitle_text_color}
                   presets={TEXT_COLOR_PRESETS}
-                  onChange={(subtitle_text_color) => set({ subtitle_text_color })}
+                  onChange={(subtitle_text_color) =>
+                    set({ subtitle_text_color })
+                  }
                 />
                 <ColorChoice
                   label="Contorno"
                   value={settings.subtitle_outline_color}
                   presets={OUTLINE_COLOR_PRESETS}
-                  onChange={(subtitle_outline_color) => set({ subtitle_outline_color })}
+                  onChange={(subtitle_outline_color) =>
+                    set({ subtitle_outline_color })
+                  }
                 />
               </>
             )}
@@ -269,7 +296,13 @@ export function SettingsView({
               </div>
               <div>
                 <dt>FFmpeg</dt>
-                <dd>{health ? (health.dependencies.ffmpeg ? "Disponível" : "Ausente") : "—"}</dd>
+                <dd>
+                  {health
+                    ? health.dependencies.ffmpeg
+                      ? "Disponível"
+                      : "Ausente"
+                    : "—"}
+                </dd>
               </div>
             </dl>
             {message && <p className="message message--error">{message}</p>}

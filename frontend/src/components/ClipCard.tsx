@@ -12,14 +12,20 @@ interface Props {
 export function ClipCard({ clip }: Props) {
   const source = clip.media_url ? mediaUrl(clip.media_url) : null;
   const download = clip.download_url ? mediaUrl(clip.download_url) : null;
-  const label = `Clip ${String(clip.sequence + 1).padStart(2, "0")}`;
+  const label = `Clipe ${String(clip.sequence + 1).padStart(2, "0")}`;
 
   return (
     <article className="clip">
       <div className="clip__frame">
         {source ? (
           // `preload="metadata"` evita baixar todos os clips ao abrir a lista.
-          <video className="clip__video" src={source} controls preload="metadata" />
+          <video
+            className="clip__video"
+            src={source}
+            controls
+            preload="metadata"
+            aria-label={label}
+          />
         ) : (
           <p className="clip__unavailable">Render indisponível</p>
         )}

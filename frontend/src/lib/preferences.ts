@@ -45,12 +45,12 @@ export function clearSettings(): void {
   }
 }
 
-/** Pasta padrão: `Videos\Clipper` do próprio usuário, resolvida pelo sistema. */
+/** Pasta padrão para novas preferências; diretórios já salvos são preservados. */
 export async function defaultOutputDirectory(): Promise<string | null> {
   if (!isTauri()) return null;
   try {
     const { videoDir, join } = await import("@tauri-apps/api/path");
-    return await join(await videoDir(), "Clipper");
+    return await join(await videoDir(), "SignalCut");
   } catch {
     return null;
   }

@@ -1,11 +1,12 @@
-# Clipper
+# SignalCut
 
 Login, legenda fixa, publicação de Shorts e executável Windows: [guia](docs/youtube-publishing.md).
 
 Transforma vídeos escolhidos por você em clipes verticais (9:16) de até 3 minutos para YouTube Shorts.
 
 Inclui importação por URL/arquivo, corte, transcrição, renderização e fila de publicação automática.
-Abra o painel **YouTube Shorts** no Clipper para conectar o canal e salvar descrição e hashtags.
+Abra o painel **Publicação no YouTube** no SignalCut para conectar o canal e salvar descrição e hashtags.
+Execute `SignalCut.exe` para usar a interface desktop. [Identidade visual e validação](docs/design/signalcut-redesign.md).
 Veja o [mapa de pastas](docs/repository-layout.md) para localizar código, mídia e configurações.
 
 ## Estrutura
