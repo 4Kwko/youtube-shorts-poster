@@ -1,5 +1,8 @@
 # --- Segredos e ambiente ---
 .env
+client_secret*.json
+youtube-token*.json
+/Clipper.exe
 .env.*
 !.env.example
 

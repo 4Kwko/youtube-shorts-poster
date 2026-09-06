@@ -93,6 +93,10 @@ class Settings(BaseSettings):
     # Intervalo de ociosidade do worker local entre varreduras do banco.
     worker_poll_seconds: float = 2.0
 
+    youtube_auto_publish: bool = False
+    youtube_privacy: Literal["public", "unlisted", "private"] = "public"
+    youtube_channel_id: str = "UCIFdqrXY6deb778euhwYKFA"
+
     storage_root: Path = Path("storage")
     database_url: str = "sqlite:///./storage/app.db"
 

@@ -8,8 +8,9 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.api.routes import clips, videos
+from app.api.routes import clips, videos, youtube
 
 api_router = APIRouter()
 api_router.include_router(videos.router)
 api_router.include_router(clips.router)
+api_router.include_router(youtube.router)

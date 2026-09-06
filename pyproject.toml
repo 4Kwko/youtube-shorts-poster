@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Transforma vídeos longos em clips verticais para TikTok, Reels e Shorts."
 requires-python = ">=3.12"
 dependencies = [
+    "google-api-python-client>=2.150",
+    "google-auth-oauthlib>=1.2",
     "fastapi>=0.115",
     "yt-dlp>=2024.8.6",
     "sqlalchemy>=2.0",

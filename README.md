@@ -1,5 +1,7 @@
 # Clipper
 
+Automatic YouTube publishing and Windows executable setup: [guide](docs/youtube-publishing.md).
+
 Transforma vídeos longos em clips verticais (9:16) prontos para TikTok, Instagram Reels e YouTube Shorts.
 
 > **Status:** esqueleto inicial. Apenas a fundação do backend está implementada (config, logging, erros, `/health`). Nenhum processamento de vídeo ainda.

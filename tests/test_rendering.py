@@ -227,6 +227,30 @@ def test_handler_renders_every_clip_and_persists_keys(
         assert video.progress == 100
 
 
+def test_render_enqueues_all_clips_once_for_youtube(
+    monkeypatch: pytest.MonkeyPatch, context: JobContext
+) -> None:
+    from app.services.youtube import ledger
+
+    context.settings.youtube_auto_publish = True
+    _fake_renderer(monkeypatch)
+    handle_render(context)
+    handle_render(context)
+    with ledger(context.settings) as db:
+        rows = db.execute("SELECT * FROM uploads").fetchall()
+    assert len(rows) == 3
+    assert all(row["state"] == "queued" for row in rows)
+    assert all(row["privacy"] == "public" for row in rows)
+
+
+def test_render_without_youtube_enabled_does_not_queue(
+    monkeypatch: pytest.MonkeyPatch, context: JobContext
+) -> None:
+    _fake_renderer(monkeypatch)
+    handle_render(context)
+    assert not (context.settings.storage_root / "youtube-uploads.db").exists()
+
+
 def test_render_reads_original_video_with_clip_interval(
     monkeypatch: pytest.MonkeyPatch, context: JobContext
 ) -> None:

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { EngineStatusPill } from "./EngineStatusPill";
 import { Sidebar } from "./Sidebar";
+import { YouTubeStatus } from "./YouTubeStatus";
 import type { EngineState } from "../lib/engine";
 import type { NavKey, ViewKey } from "../lib/navigation";
 import { VIEW_TITLES } from "../lib/navigation";
@@ -50,6 +51,7 @@ export function AppShell({
           {/* A key troca a cada tela, então a transição roda na navegação. */}
           <div className="content__inner" key={view}>
             {children}
+            <YouTubeStatus />
           </div>
         </main>
       </div>

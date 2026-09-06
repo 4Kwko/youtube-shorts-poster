@@ -97,6 +97,13 @@ async function request<T>(
 }
 
 export const api = {
+  youtubeStatus(): Promise<{
+    enabled: boolean; connected: boolean;
+    uploads: { clip_id: string; title: string; state: string; youtube_id: string | null;
+      actual_privacy: string | null; error: string | null }[];
+  }> {
+    return request("/api/v1/youtube/status", {}, REQUEST_TIMEOUT_MS);
+  },
   health(signal?: AbortSignal): Promise<Health> {
     return request<Health>("/health", {}, HEALTH_TIMEOUT_MS, signal);
   },

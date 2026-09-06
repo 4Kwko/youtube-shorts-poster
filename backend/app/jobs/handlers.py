@@ -418,6 +418,22 @@ def handle_render(context: JobContext) -> None:
 
     _generate_project_thumbnail(context)
 
+    if context.settings.youtube_auto_publish:
+        from app.services.youtube import enqueue
+
+        with session_scope(context.session_factory) as session:
+            video = VideoRepository(session).get_by_id(context.video_id)
+            if video is not None:
+                for clip in ClipRepository(session).list_for_video(context.video_id):
+                    if clip.rendered_file_key:
+                        enqueue(
+                            context.settings, clip.id,
+                            resolve_storage_path(context.settings, RENDERS_SUBDIR,
+                                                 *clip.rendered_file_key.split("/")),
+                            f"{(video.title or 'SignalCut')[:75]} - Part {clip.sequence + 1}",
+                            video.source_url or "",
+                        )
+
     with session_scope(context.session_factory) as session:
         VideoRepository(session).update_status(
             context.video_id, VideoStatus.RENDERED, progress=100, current_stage="rendered"
