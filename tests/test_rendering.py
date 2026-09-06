@@ -79,7 +79,7 @@ def test_render_args_encode_h264_and_aac() -> None:
     # A saída do grafo é mapeada explicitamente; `0:a?` mantém o áudio.
     assert args[args.index("-map") + 1] == "[v]"
     assert "0:a?" in args
-    assert args[-1] == "/out/000.mp4"
+    assert args[-1] == str(Path("/out/000.mp4"))
 
 
 # --- renderer -------------------------------------------------------------
@@ -248,7 +248,10 @@ def test_render_without_youtube_enabled_does_not_queue(
 ) -> None:
     _fake_renderer(monkeypatch)
     handle_render(context)
-    assert not (context.settings.storage_root / "youtube-uploads.db").exists()
+    from app.services.youtube import ledger
+
+    with ledger(context.settings) as db:
+        assert db.execute("SELECT COUNT(*) FROM uploads").fetchone()[0] == 0
 
 
 def test_render_reads_original_video_with_clip_interval(
@@ -330,7 +333,7 @@ def test_real_render_always_outputs_1080x1920(
     settings: Settings, tmp_path: Path, size: str, label: str
 ) -> None:
     settings.ensure_storage_dirs()
-    source = tmp_path / f"{label}.mp4"
+    source = tmp_path / f"{label.replace(':', '-')}.mp4"
     ffmpeg = shutil.which("ffmpeg")
     assert ffmpeg is not None
     subprocess.run(  # noqa: S603 - lista fixa, binário resolvido por shutil.which

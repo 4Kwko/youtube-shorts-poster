@@ -198,9 +198,13 @@ def test_list_jobs_for_video(client: TestClient) -> None:
 
 
 def test_jobs_are_ordered_by_creation(
-    client: TestClient, session_factory: sessionmaker[Session]
+    client: TestClient, session_factory: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from app.db.base import utcnow
+
     video_id = client.post("/api/v1/videos", json={"url": VALID_URL}).json()["id"]
+    fixed_time = utcnow()
+    monkeypatch.setattr("app.repositories.job.utcnow", lambda: fixed_time)
     with session_scope(session_factory) as session:
         repo = JobRepository(session)
         repo.create(video_id=video_id, job_type=JobType.TRANSCRIBE)
@@ -574,7 +578,7 @@ def test_batch_gives_each_video_its_own_settings_snapshot(
         "/api/v1/videos/batch",
         json={
             "urls": [f"https://www.youtube.com/watch?v=abc{index}" for index in range(3)],
-            "settings": {"clip_duration_seconds": 300, "layout": "blurred_16_9"},
+            "settings": {"clip_duration_seconds": 120, "layout": "blurred_16_9"},
         },
     ).json()
 
@@ -582,7 +586,7 @@ def test_batch_gives_each_video_its_own_settings_snapshot(
         for video in body["videos"]:
             stored = VideoRepository(session).get_by_id(video["id"])
             assert stored is not None
-            assert stored.settings.clip_duration_seconds == 300
+            assert stored.settings.clip_duration_seconds == 120
             assert stored.settings.layout is VerticalLayout.BLURRED_16_9
 
 

@@ -21,6 +21,7 @@ from app.core.logging import configure_logging
 from app.core.middleware import RequestContextMiddleware
 from app.db.session import create_db_engine, create_session_factory
 from app.services.media.binaries import MediaBinary, get_binary_status
+from app.services.youtube_auth import LoginSession
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     app.state.settings = settings
+    app.state.youtube_login = LoginSession()
     # Engine criado uma vez por aplicação; conexões só abrem sob demanda.
     engine = create_db_engine(settings)
     app.state.db_engine = engine

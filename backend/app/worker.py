@@ -28,17 +28,25 @@ def main() -> int:
     stop_uploads = threading.Event()
 
     def publish_pending() -> None:
-        from app.services.youtube import drain
+        from app.services.youtube import drain, publishing_error
+        from app.services.youtube_preferences import preferences
 
         while not stop_uploads.is_set():
             try:
-                drain(settings)
+                if preferences(settings).enabled:
+                    drain(settings, respect_pause=True)
+                    publishing_error(settings, save=True)
             except Exception:
+                publishing_error(
+                    settings,
+                    "Envio pausado por falha de conexão, autorização ou "
+                    "API. Confira o canal e reconecte se necessário.",
+                    save=True,
+                )
                 logger.warning("YouTube upload paused; use app.cli.youtube status to inspect.")
             stop_uploads.wait(30)
 
-    if settings.youtube_auto_publish:
-        threading.Thread(target=publish_pending, daemon=True, name="youtube-publisher").start()
+    threading.Thread(target=publish_pending, daemon=True, name="youtube-publisher").start()
 
     try:
         worker.run_forever()

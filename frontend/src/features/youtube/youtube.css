@@ -1,0 +1,14 @@
+.youtube-panel { margin-bottom: 20px; border: 1px solid #454550; border-radius: 12px; }
+.youtube-panel summary { cursor: pointer; padding: 16px; font-weight: 600; }
+.youtube-content { padding: 0 16px 16px; display: grid; gap: 16px; }
+.youtube-content p { margin: 0; line-height: 1.5; }
+.youtube-content form { display: grid; gap: 14px; }
+.youtube-content label { display: grid; gap: 6px; }
+.youtube-content input:not([type=checkbox]), .youtube-content textarea,
+.youtube-content select { width: 100%; padding: 10px; border-radius: 6px; background: #20202a; color: #fafafa; border: 1px solid #666; }
+.youtube-content .youtube-toggle { display: flex; align-items: center; gap: 8px; }
+.youtube-content button { padding: 10px 16px; border-radius: 6px; background: #ae2344; color: white; cursor: pointer; justify-self: start; }
+.youtube-content button:disabled { opacity: .5; cursor: default; }
+.youtube-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.youtube-upload { display: grid; gap: 6px; padding: 12px 0; border-top: 1px solid #454550; }
+.youtube-upload a { color: #ff9db2; }

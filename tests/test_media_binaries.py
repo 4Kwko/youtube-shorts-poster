@@ -244,7 +244,7 @@ def test_ffprobe_args_are_a_list_with_terminator() -> None:
     assert isinstance(args, list)
     assert args[0] == "/usr/bin/ffprobe"
     assert args[-2] == "-i"
-    assert args[-1] == "/storage/downloads/-x.mp4"
+    assert args[-1] == str(Path("/storage/downloads/-x.mp4"))
 
 
 # --- probe via storage ----------------------------------------------------

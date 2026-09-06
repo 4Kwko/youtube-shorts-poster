@@ -97,8 +97,20 @@ async function request<T>(
 }
 
 export const api = {
+  youtubeConnect(): Promise<{ started: boolean }> {
+    return request("/api/v1/youtube/connect", { method: "POST", body: "{}" });
+  },
+  youtubeClient(content: string): Promise<{ saved: boolean }> {
+    return request("/api/v1/youtube/client", { method: "PUT", body: JSON.stringify({ content }) });
+  },
+  youtubeSavePreferences(value: PublishingPreferences): Promise<PublishingPreferences> {
+    return request("/api/v1/youtube/preferences", { method: "PUT", body: JSON.stringify(value) });
+  },
   youtubeStatus(): Promise<{
     enabled: boolean; connected: boolean;
+    configured: boolean; channel: string | null; channel_id: string;
+    login_state: string; login_error: string | null; publishing_error: string | null;
+    preferences: PublishingPreferences;
     uploads: { clip_id: string; title: string; state: string; youtube_id: string | null;
       actual_privacy: string | null; error: string | null }[];
   }> {
@@ -177,3 +189,10 @@ export const api = {
     return request<Clip[]>(`/api/v1/videos/${videoId}/clips`, {}, REQUEST_TIMEOUT_MS, signal);
   },
 };
+
+export interface PublishingPreferences {
+  enabled: boolean;
+  description: string;
+  hashtags: string;
+  privacy: "public" | "unlisted" | "private";
+}

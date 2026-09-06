@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from app.core.config import Settings
+from app.services.media.probe import probe_file
+from app.services.youtube_preferences import description_text, preferences
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -53,6 +55,7 @@ def ledger(settings: Settings) -> Iterator[sqlite3.Connection]:
 
 
 def enqueue(settings: Settings, clip_id: str, path: Path, title: str, source: str) -> None:
+    options = preferences(settings)
     with ledger(settings) as db:
         db.execute(
             "INSERT OR IGNORE INTO uploads VALUES (?, ?, ?, ?, ?, 'queued', NULL, NULL, NULL)",
@@ -60,13 +63,13 @@ def enqueue(settings: Settings, clip_id: str, path: Path, title: str, source: st
                 clip_id,
                 str(path.resolve()),
                 title.replace("<", "").replace(">", "")[:100],
-                f"Source: {source}" if source else "",
-                settings.youtube_privacy,
+                description_text(options),
+                options.privacy,
             ),
         )
 
 
-def drain(settings: Settings, service: Any = None) -> None:
+def drain(settings: Settings, service: Any = None, *, respect_pause: bool = False) -> None:
     """Atomic claims prevent duplicate inserts across workers and render retries.
 
     Interrupted uploads require reconciliation: YouTube has no idempotency key.
@@ -83,6 +86,8 @@ def drain(settings: Settings, service: Any = None) -> None:
     if settings.youtube_channel_id not in [item["id"] for item in channels.get("items", [])]:
         raise RuntimeError("Connected channel differs from YOUTUBE_CHANNEL_ID; upload stopped.")
     for row in rows:
+        if respect_pause and not preferences(settings).enabled:
+            return
         path = Path(row["path"]).resolve()
         if (
             not path.is_relative_to((settings.storage_root / "renders").resolve())
@@ -93,6 +98,28 @@ def drain(settings: Settings, service: Any = None) -> None:
                     "UPDATE uploads SET state='needs_review', error=? "
                     "WHERE clip_id=? AND state='queued'",
                     ("Rendered file missing or outside storage/renders.", row["clip_id"]),
+                )
+            continue
+        try:
+            info = probe_file(path, timeout=settings.ffprobe_timeout_seconds)
+            if not (
+                info.width
+                and info.height
+                and info.width <= info.height
+                and info.duration_seconds
+                and 0 < info.duration_seconds <= 180
+            ):
+                raise ValueError("Shorts exige vídeo vertical ou quadrado de até 180 segundos.")
+        except Exception:
+            with ledger(settings) as db:
+                db.execute(
+                    "UPDATE uploads SET state='needs_review', error=? "
+                    "WHERE clip_id=? AND state='queued'",
+                    (
+                        "Envio bloqueado: confira formato vertical/quadrado, duração até 180s "
+                        "e disponibilidade do FFprobe.",
+                        row["clip_id"],
+                    ),
                 )
             continue
         with ledger(settings) as db:
@@ -140,3 +167,16 @@ def report(settings: Settings) -> str:
             "SELECT clip_id,title,state,youtube_id,actual_privacy,error FROM uploads"
         ).fetchall()
     return json.dumps([dict(row) for row in rows], indent=2, ensure_ascii=False)
+
+
+def publishing_error(
+    settings: Settings, message: str | None = None, *, save: bool = False
+) -> str | None:
+    with ledger(settings) as db:
+        db.execute(
+            "CREATE TABLE IF NOT EXISTS publisher_status (id INTEGER PRIMARY KEY, error TEXT)"
+        )
+        if save:
+            db.execute("INSERT OR REPLACE INTO publisher_status VALUES (1, ?)", (message,))
+        row = db.execute("SELECT error FROM publisher_status WHERE id=1").fetchone()
+    return row[0] if row else None

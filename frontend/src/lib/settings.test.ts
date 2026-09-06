@@ -34,15 +34,15 @@ describe("defaults", () => {
 
   it("a lista de durações é a acordada com o backend", () => {
     expect([...CLIP_DURATION_OPTIONS]).toEqual([
-      30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 500,
+      30, 60, 90, 120, 150, 180,
     ]);
   });
 });
 
 describe("duração por índice", () => {
-  it("o primeiro índice é 30s e o último é 500s", () => {
+  it("o primeiro índice é 30s e o último é 180s", () => {
     expect(durationAtIndex(0)).toBe(30);
-    expect(durationAtIndex(CLIP_DURATION_OPTIONS.length - 1)).toBe(500);
+    expect(durationAtIndex(CLIP_DURATION_OPTIONS.length - 1)).toBe(180);
   });
 
   it("o default 90s está no índice 2", () => {
@@ -52,7 +52,7 @@ describe("duração por índice", () => {
 
   it("índice fora da faixa é preso às pontas", () => {
     expect(durationAtIndex(-5)).toBe(30);
-    expect(durationAtIndex(999)).toBe(500);
+    expect(durationAtIndex(999)).toBe(180);
   });
 
   it("valor desconhecido cai no default em vez de sumir do slider", () => {
@@ -69,7 +69,7 @@ describe("duração por índice", () => {
 describe("normalizeSettings", () => {
   it("mantém uma seleção válida", () => {
     const settings = withSettings({
-      clip_duration_seconds: 300,
+      clip_duration_seconds: 120,
       layout: "blurred_16_9",
       subtitle_font_size: 96,
       volume: 60,
@@ -192,14 +192,14 @@ describe("summaryItems", () => {
 
 describe("snapshot ao gerar clips", () => {
   it("o payload leva as configurações do momento do clique", () => {
-    const atClick = withSettings({ clip_duration_seconds: 300, volume: 40 });
+    const atClick = withSettings({ clip_duration_seconds: 120, volume: 40 });
     const payload = buildCreatePayload("https://youtu.be/abc", atClick);
 
     // Mudar as preferências depois não altera o payload já montado.
     const laterChanges = withSettings({ clip_duration_seconds: 30, volume: 100 });
     expect(laterChanges.clip_duration_seconds).toBe(30);
 
-    expect(payload.settings.clip_duration_seconds).toBe(300);
+    expect(payload.settings.clip_duration_seconds).toBe(120);
     expect(payload.settings.volume).toBe(40);
   });
 });
@@ -208,11 +208,11 @@ describe("buildBatchPayload", () => {
   it("um snapshot só para todas as URLs", () => {
     const payload = buildBatchPayload(
       ["  https://youtu.be/a  ", "https://youtu.be/b"],
-      withSettings({ clip_duration_seconds: 300, layout: "blurred_16_9" }),
+      withSettings({ clip_duration_seconds: 120, layout: "blurred_16_9" }),
     );
 
     expect(payload.urls).toEqual(["https://youtu.be/a", "https://youtu.be/b"]);
-    expect(payload.settings.clip_duration_seconds).toBe(300);
+    expect(payload.settings.clip_duration_seconds).toBe(120);
     expect(payload.settings.layout).toBe("blurred_16_9");
   });
 

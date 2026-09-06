@@ -4,7 +4,16 @@ from unittest.mock import MagicMock
 import pytest
 
 from app.core.config import Settings
+from app.schemas.media import MediaInfo
 from app.services.youtube import drain, enqueue, ledger
+
+
+@pytest.fixture(autouse=True)
+def mock_probe(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "app.services.youtube.probe_file",
+        lambda *args, **kwargs: MediaInfo(width=1080, height=1920, duration_seconds=30),
+    )
 
 
 def setup_queue(tmp_path: Path) -> tuple[Settings, MagicMock]:
@@ -66,3 +75,40 @@ def test_missing_render_is_held(tmp_path: Path) -> None:
     service.videos.assert_not_called()
     with ledger(settings) as db:
         assert db.execute("SELECT state FROM uploads").fetchone()[0] == "needs_review"
+
+
+@pytest.mark.parametrize(
+    "width,height,duration", [(1920, 1080, 30), (1080, 1920, 181), (1080, 1920, None)]
+)
+def test_non_shorts_never_upload(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, width: int, height: int, duration: float | None
+) -> None:
+    monkeypatch.setattr(
+        "app.services.youtube.probe_file",
+        lambda *args, **kwargs: MediaInfo(width=width, height=height, duration_seconds=duration),
+    )
+    settings, service = setup_queue(tmp_path)
+    drain(settings, service)
+    service.videos.assert_not_called()
+    with ledger(settings) as db:
+        assert db.execute("SELECT state FROM uploads").fetchone()[0] == "needs_review"
+
+
+def test_preferences_are_snapshotted_and_pause_stops_upload(tmp_path: Path) -> None:
+    from app.services.youtube_preferences import PublishingPreferences, save_preferences
+
+    settings, service = setup_queue(tmp_path)
+    save_preferences(
+        settings,
+        PublishingPreferences(
+            enabled=True, description="Minha legenda", hashtags="Shorts #Teste #Teste"
+        ),
+    )
+    enqueue(settings, "second", tmp_path / "renders/clip.mp4", "Segundo", "")
+    save_preferences(settings, PublishingPreferences(enabled=False, description="Outra"))
+    drain(settings, service, respect_pause=True)
+    service.videos.assert_not_called()
+    with ledger(settings) as db:
+        assert db.execute("SELECT description FROM uploads WHERE clip_id='second'").fetchone()[
+            0
+        ] == ("Minha legenda\n\n#Shorts #Teste")

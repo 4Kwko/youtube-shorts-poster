@@ -15,7 +15,7 @@ describe("preferências do app", () => {
   it("sobrevive entre execuções", () => {
     const chosen = {
       ...DEFAULT_SETTINGS,
-      clip_duration_seconds: 300,
+      clip_duration_seconds: 120,
       layout: "blurred_16_9" as const,
       subtitle_font_size: 96,
       output_directory: "D:\\Videos\\Clipper",

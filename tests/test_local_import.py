@@ -269,13 +269,13 @@ def test_local_endpoint_carries_the_settings_snapshot(
 ) -> None:
     body = client.post(
         "/api/v1/videos/local",
-        json={"paths": [str(sample_video)], "settings": {"clip_duration_seconds": 300}},
+        json={"paths": [str(sample_video)], "settings": {"clip_duration_seconds": 120}},
     ).json()
 
     with session_scope(session_factory) as session:
         stored = VideoRepository(session).get_by_id(body["videos"][0]["id"])
         assert stored is not None
-        assert stored.settings.clip_duration_seconds == 300
+        assert stored.settings.clip_duration_seconds == 120
         assert stored.source_type is SourceType.LOCAL
 
 

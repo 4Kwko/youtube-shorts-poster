@@ -103,7 +103,7 @@ def test_clip_args_use_reencode_and_exact_window() -> None:
     # Stream copy cortaria no keyframe mais próximo.
     assert "copy" not in args
     assert args[args.index("-c:v") + 1] == "libx264"
-    assert args[-1] == "/o/001.mp4"
+    assert args[-1] == str(Path("/o/001.mp4"))
 
 
 def test_clip_filenames_sort_naturally() -> None:

@@ -11,17 +11,6 @@ CLIP_DURATION_OPTIONS: tuple[int, ...] = (
     120,
     150,
     180,
-    210,
-    240,
-    270,
-    300,
-    330,
-    360,
-    390,
-    420,
-    450,
-    480,
-    500,
 )
 
 DEFAULT_CLIP_DURATION_SECONDS = 90

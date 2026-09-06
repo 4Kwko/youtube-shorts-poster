@@ -13,7 +13,7 @@ export type OutputFps = "original" | "30" | "60";
 export type FilenamePattern = "clip" | "title";
 
 export const CLIP_DURATION_OPTIONS = [
-  30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 500,
+  30, 60, 90, 120, 150, 180,
 ] as const;
 
 export type ClipDuration = (typeof CLIP_DURATION_OPTIONS)[number];
@@ -171,7 +171,7 @@ export function normalizeSettings(settings: VideoSettings): VideoSettings {
     version: defaults.version,
     clip_duration_seconds: isValidDuration(settings.clip_duration_seconds)
       ? settings.clip_duration_seconds
-      : defaults.clip_duration_seconds,
+      : settings.clip_duration_seconds > 180 ? 180 : defaults.clip_duration_seconds,
     layout: oneOf(settings.layout, LAYOUT_OPTIONS, defaults.layout),
     blur_strength: clamp(settings.blur_strength, 0, 100, defaults.blur_strength),
     background_darkness: clamp(

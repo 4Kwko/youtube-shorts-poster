@@ -119,6 +119,10 @@ class VideoSettings(BaseModel):
         """
         if not isinstance(payload, dict):
             return cls()
+        # Older projects may have long clips; retain their other render preferences.
+        duration = payload.get("clip_duration_seconds")
+        if isinstance(duration, (int, float)) and duration > 180:
+            payload = {**payload, "clip_duration_seconds": 180}
         try:
             return cls.model_validate(payload)
         except ValueError:

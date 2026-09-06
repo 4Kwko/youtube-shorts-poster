@@ -418,7 +418,9 @@ def handle_render(context: JobContext) -> None:
 
     _generate_project_thumbnail(context)
 
-    if context.settings.youtube_auto_publish:
+    from app.services.youtube_preferences import preferences
+
+    if preferences(context.settings).enabled:
         from app.services.youtube import enqueue
 
         with session_scope(context.session_factory) as session:

@@ -36,8 +36,17 @@ def main() -> None:
         path.write_text(credentials.to_json(), encoding="utf-8")
         for channel in channels.get("items", []):
             print(channel["id"], channel["snippet"]["title"])
+        from pathlib import Path
+
         from dotenv import set_key
 
+        from app.services.youtube_auth import save_oauth_config
+        from app.services.youtube_preferences import preferences, save_preferences
+
+        save_oauth_config(settings, Path(args.client_json).read_text(encoding="utf-8"))
+        options = preferences(settings)
+        options.enabled = True
+        save_preferences(settings, options)
         set_key(".env", "YOUTUBE_AUTO_PUBLISH", "true")
         print("Automatic publishing enabled. Restart Clipper to start uploads.")
     elif args.command == "retry":

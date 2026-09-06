@@ -1,4 +1,4 @@
-PATCH — importação de arquivo local
+PATCH — importação de arquivo local (registro histórico)
 ===================================
 
 Extraia sobre a raiz do projeto. O Rust NÃO mudou: o `tauri-plugin-dialog` já

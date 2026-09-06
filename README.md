@@ -1,10 +1,12 @@
 # Clipper
 
-Automatic YouTube publishing and Windows executable setup: [guide](docs/youtube-publishing.md).
+Login, legenda fixa, publicação de Shorts e executável Windows: [guia](docs/youtube-publishing.md).
 
-Transforma vídeos longos em clips verticais (9:16) prontos para TikTok, Instagram Reels e YouTube Shorts.
+Transforma vídeos escolhidos por você em clipes verticais (9:16) de até 3 minutos para YouTube Shorts.
 
-> **Status:** esqueleto inicial. Apenas a fundação do backend está implementada (config, logging, erros, `/health`). Nenhum processamento de vídeo ainda.
+Inclui importação por URL/arquivo, corte, transcrição, renderização e fila de publicação automática.
+Abra o painel **YouTube Shorts** no Clipper para conectar o canal e salvar descrição e hashtags.
+Veja o [mapa de pastas](docs/repository-layout.md) para localizar código, mídia e configurações.
 
 ## Estrutura
 
@@ -14,7 +16,7 @@ backend/            API FastAPI
     main.py         application factory + entrypoint ASGI
     api/            rotas HTTP e dependências
     core/           config, logging, erros, middleware
-    models/         persistência (vazio até a etapa de banco)
+    models/         modelos persistidos no banco
     schemas/        contratos de entrada/saída (Pydantic)
     services/       regras de negócio, sem dependência de HTTP
       media/        interação com FFmpeg/FFprobe (detecção, runner, probe)

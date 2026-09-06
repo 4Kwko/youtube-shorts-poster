@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from datetime import datetime, timedelta
 from typing import Any, cast
 
 from sqlalchemy import select, update
@@ -26,7 +27,19 @@ class JobRepository:
         job_type: JobType,
         max_attempts: int = 3,
     ) -> Job:
-        job = Job(video_id=video_id, job_type=job_type, max_attempts=max_attempts)
+        # Windows can return the same clock value for several inserts in a batch.
+        # Keep insertion order instead of breaking these ties with random UUIDs.
+        created_at = utcnow()
+        previous = self._session.info.get("last_job_created_at")
+        if isinstance(previous, datetime) and created_at <= previous:
+            created_at = previous + timedelta(microseconds=1)
+        self._session.info["last_job_created_at"] = created_at
+        job = Job(
+            video_id=video_id,
+            job_type=job_type,
+            max_attempts=max_attempts,
+            created_at=created_at,
+        )
         self._session.add(job)
         self._session.flush()
         return job
