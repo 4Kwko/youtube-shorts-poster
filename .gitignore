@@ -1,0 +1,52 @@
+# --- Segredos e ambiente ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+
+# --- Mídia gerada (nunca versionar) ---
+storage/*
+!storage/.gitkeep
+!storage/*/
+storage/*/*
+!storage/*/.gitkeep
+*.mp4
+*.mkv
+*.webm
+*.wav
+*.mp3
+*.srt
+*.ass
+
+# --- Banco local ---
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# --- Editores / SO ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

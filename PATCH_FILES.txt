@@ -1,0 +1,72 @@
+PATCH — importação de arquivo local
+===================================
+
+Extraia sobre a raiz do projeto. O Rust NÃO mudou: o `tauri-plugin-dialog` já
+tinha sido adicionado no patch de exportação, e a permissão `dialog:allow-open`
+cobre também a seleção de arquivos. Não é preciso `cargo check`.
+
+Rode a migration depois de extrair.
+
+MIGRATION
+---------
+`12eb152f0108`: adiciona `source_type` (server_default `REMOTE`) e `import_path`
+a `videos`, e torna `source_url` nulo — vídeo do disco não tem URL a inventar.
+Vídeos existentes continuam válidos e marcados como remotos.
+
+NOVOS
+-----
+backend/app/services/ingest/local.py
+    `validate_local_source()`: caminho absoluto, existe, é arquivo regular, não
+    é pasta, extensão conhecida, tamanho dentro do limite. Validação própria —
+    não reaproveita os helpers de storage interno, cujas regras são outras.
+    `import_local_file()`: ffprobe antes de copiar (recusa duração acima do
+    limite sem gastar disco), cópia em blocos de 1 MiB com progresso por bytes,
+    e o mesmo `VideoSourceInfo` que a ingestão por URL devolve.
+
+tests/test_local_import.py
+    Arquivo válido, inexistente, pasta, extensão enganosa, ffprobe recusando,
+    limites de tamanho e duração, progresso, cleanup de cópia parcial, handler
+    completo e a garantia de que excluir o projeto não toca no original.
+
+MODIFICADOS — BACKEND
+---------------------
+backend/app/models/enums.py      `SourceType` (remote/local).
+backend/app/models/video.py      `source_url` nulo, `source_type`,
+                                 `import_path` (limpo após a cópia).
+backend/app/repositories/video.py
+                                 `create_local()`.
+backend/app/schemas/video.py     `LocalImportRequest`; `source_type` nas
+                                 respostas.
+backend/app/api/routes/videos.py `POST /api/v1/videos/local`: valida todos os
+                                 caminhos antes de persistir, colapsa
+                                 duplicatas e cria um job `ingest` por arquivo.
+backend/app/jobs/handlers.py     `handle_ingest` escolhe a origem pelo
+                                 `source_type`; o resto do pipeline não sabe de
+                                 onde o vídeo veio.
+
+MODIFICADOS — FRONTEND
+----------------------
+frontend/src/lib/queue.ts (+ teste)
+                                 Itens da fila passam a ter `kind`, `value` e
+                                 `label`; `addFiles()` e `partition()`. Limite
+                                 de 20 e deduplicação valem para a fila mista.
+frontend/src/lib/preferences.ts  `chooseVideoFiles()` — seletor nativo com
+                                 múltipla seleção e filtro de extensões.
+frontend/src/components/HomeView.tsx
+                                 Alternador `Link` / `Arquivo`, botão
+                                 `Selecionar vídeos` e ícone por tipo na fila.
+frontend/src/App.tsx             Separa a fila por destino e chama os dois
+                                 endpoints; um payload misto esconderia
+                                 validações bem diferentes.
+frontend/src/lib/api.ts, types.ts
+                                 `createLocalVideos()`, `SourceType`.
+frontend/src/components/ProjectCard.tsx, ProjectsView.tsx
+                                 Card mostra `Local` no lugar do provedor.
+frontend/src/styles/settings.css Estilos do alternador e da fila.
+
+DEPOIS DE EXTRAIR
+-----------------
+    .venv\Scripts\python -m alembic upgrade head
+    .venv\Scripts\python -m pytest
+    cd frontend
+    npm run typecheck; npm run lint; npm run test; npm run build

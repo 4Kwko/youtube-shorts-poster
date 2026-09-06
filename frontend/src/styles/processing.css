@@ -1,0 +1,150 @@
+.processing {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1040px) {
+  .processing {
+    grid-template-columns: 1fr;
+  }
+}
+
+.processing__preview {
+  aspect-ratio: 9 / 16;
+  max-height: 460px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-faint);
+  overflow: hidden;
+}
+
+.processing__panel {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.processing__heading h1 {
+  font-size: 20px;
+}
+
+.processing__subject {
+  margin-top: 4px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pipeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pipeline__step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  transition: background var(--transition), color var(--transition);
+}
+
+.pipeline__marker {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.pipeline__step--done {
+  color: var(--text-muted);
+}
+
+.pipeline__step--done .pipeline__marker {
+  color: var(--success);
+}
+
+.pipeline__step--current {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.pipeline__step--current .pipeline__marker {
+  color: var(--accent);
+}
+
+.pipeline__step--failed {
+  color: var(--danger);
+}
+
+/* Pulso lento só no passo ativo, para indicar trabalho em curso. */
+.pipeline__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipeline__pulse {
+    animation: none;
+  }
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress__track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.progress__bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 300ms ease;
+}
+
+.progress__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.processing__failure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}

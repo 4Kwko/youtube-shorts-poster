@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Permissões mínimas: janela principal, opener, diálogo de pasta e caminhos do sistema.",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "core:path:default",
+    "opener:default",
+    "opener:allow-open-url",
+    "opener:allow-open-path",
+    "dialog:default",
+    "dialog:allow-open"
+  ]
+}

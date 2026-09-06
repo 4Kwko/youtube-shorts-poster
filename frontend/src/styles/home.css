@@ -1,0 +1,15 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.hero h1 {
+  font-size: 26px;
+}
+
+.hero p {
+  margin-top: 6px;
+  color: var(--text-muted);
+}
+
