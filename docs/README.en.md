@@ -14,7 +14,7 @@ A desktop app that turns videos you choose into captioned 9:16 clips for YouTube
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph Desktop["Desktop app (Tauri + React)"]
         UI[Interface]
     end

@@ -14,7 +14,7 @@ Aplicativo desktop que transforma vídeos escolhidos pelo usuário em clipes ver
 ## Como funciona
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph Desktop["App desktop (Tauri + React)"]
         UI[Interface]
     end
