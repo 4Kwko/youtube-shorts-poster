@@ -11,6 +11,9 @@ dependencies = [
     "sqlalchemy>=2.0",
     "alembic>=1.13",
     "faster-whisper>=1.0",
+    # PyAV 19 removeu o argumento metadata_errors que o faster-whisper 1.2.x passa
+    # para av.open(); sem este limite, uma instalação nova falha ao transcrever.
+    "av>=11,<19",
     "uvicorn[standard]>=0.30",
     "pydantic>=2.8",
     "pydantic-settings>=2.4",
